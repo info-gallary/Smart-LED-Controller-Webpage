@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hanging Bulb</title>
+  <style>
+    body {
+      background-color: #0e0d0d;
+    }
+
+    .rope {
+      width: 4px;
+      height: 200px;
+      background-color: #777;
+      position: absolute;
+      top: 20px;
+      left: calc(50% - 2px);
+    }
+
+    .container {
+      position: relative;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .bulb {
+      width: 100px;
+      height: 100px;
+      background-color: #f2f2f2;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bulb:before {
+      content: '';
+      width: 200px;
+      height: 200px;
+      background-color: #ffeb3b;
+      border-radius: 50%;
+      position: absolute;
+      top: -50px;
+      left: -50px;
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    #toggleButton {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #brightnessSlider {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="rope"></div>
+  <div class="container">
+    <div class="bulb" id="bulb"></div>
+    <div class="controls">
+      <button id="toggleButton">Turn On/Off</button>
+      <input type="range" min="0" max="100" value="100" id="brightnessSlider">
+    </div>
+  </div>
+
+  <script>
+    const bulb = document.getElementById('bulb');
+    const toggleButton = document.getElementById('toggleButton');
+    const brightnessSlider = document.getElementById('brightnessSlider');
+
+    let isOn = false;
+
+    toggleButton.addEventListener('click', () => {
+      isOn = !isOn;
+      updateBulb();
+    });
+
+    brightnessSlider.addEventListener('input', () => {
+      updateBulb();
+    });
+
+    function updateBulb() {
+      const brightness = brightnessSlider.value / 100;
+      if (isOn) {
+        bulb.style.backgroundColor = `rgba(255, 235, 59, ${brightness})`;
+      } else {
+        bulb.style.backgroundColor = 'rgba(242, 242, 242, 1)';
+      }
+    }
+  </script>
+</body>
+</html>

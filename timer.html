@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #272121;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .container {
+    background-color: #fff;
+    padding: 30px;
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 0 16px 3px rgba(249, 232, 5, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .input-group label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .input-group select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .repeat-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .repeat-checkbox label {
+    margin-left: 5px;
+  }
+  
+  .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Set Timer</h1>
+  <div class="input-group">
+    <label for="hours">Hours:</label>
+    <select id="hours">
+      <option value="0">00</option>
+      <option value="1">01</option>
+      <option value="2">02</option>
+      <option value="3">03</option>
+      <option value="4">04</option>
+      <option value="5">05</option>
+      <option value="6">06</option>
+      <option value="7">07</option>
+      <option value="8">08</option>
+      <option value="9">09</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="16">16</option>
+      <option value="17">17</option>
+      <option value="18">18</option>
+      <option value="19">19</option>
+      <option value="20">20</option>
+      <option value="21">21</option>
+      <option value="22">22</option>
+      <option value="23">23</option>
+      
+      <!-- Add more options as needed -->
+    </select>
+  </div>
+  <div class="input-group">
+    <label for="minutes">Minutes:</label>
+    <select id="minutes">
+      <option value="0">00</option>
+      <option value="5">05</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30">30</option>
+      <!-- Add more options as needed -->
+    </select>
+  </div>
+  <div class="repeat-checkbox">
+    <input type="checkbox" id="repeat" />
+    <label for="repeat">Repeat Daily</label>
+  </div>
+  <button class="btn" onclick="startTimer()">Start Timer</button>
+</div>
+
+<script>
+  function startTimer() {
+    var hours = parseInt(document.getElementById('hours').value);
+    var minutes = parseInt(document.getElementById('minutes').value);
+    var repeat = document.getElementById('repeat').checked;
+
+    var currentTime = new Date();
+    var targetTime = new Date();
+    targetTime.setHours(currentTime.getHours() + hours);
+    targetTime.setMinutes(currentTime.getMinutes() + minutes);
+
+    var timerInterval = setInterval(function() {
+      var now = new Date();
+      var distance = targetTime - now;
+
+      var hoursRemaining = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutesRemaining = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+      console.log(hoursRemaining + "h " + minutesRemaining + "m ");
+
+      if (distance <= 0) {
+        clearInterval(timerInterval);
+        console.log("Timer finished!");
+        if (repeat) {
+          startTimer(); // Restart timer if repeat option is enabled
+        }
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>

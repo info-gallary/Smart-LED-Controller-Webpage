@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Wi-Fi Dimmer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+
+    <style>
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #143642;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #143642;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(-45deg, #ee7752, #754502, #072e3c, #044b3a);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+        }
+        
+
+        .content {
+            padding: 30px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #F8F7F9;
+            ;
+            box-shadow: 2px 2px 12px 1px rgba(239, 249, 55, 0.5);
+            padding-top: 10px;
+            padding-bottom: 20px;
+        }
+
+        .button {
+            padding: 15px 50px;
+            font-size: 24px;
+            text-align: center;
+            outline: none;
+            color: #fff;
+            background-color: #0f8b8d;
+            border: none;
+            border-radius: 5px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .button:active {
+            background-color: #0f8b8d;
+            box-shadow: 2 2px #fa8203;
+            transform: translateY(2px);
+        }
+
+        .state {
+            font-size: 1.5rem;
+            color: #8c8c8c;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: none;
+            color: black;
+            border: 2px solid #143642;
+        }
+
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+
+    <script>
+        var c;
+        var gateway = `ws://${window.location.hostname}/ws`;
+        var websocket;
+        window.addEventListener('load', onLoad);
+        function initWebSocket() {
+            console.log('Trying to open a WebSocket connection...');
+            websocket = new WebSocket(gateway);
+            websocket.onopen = onOpen;
+            websocket.onclose = onClose;
+            websocket.onmessage = onMessage; // <-- add this line
+        }
+        function onOpen(event) {
+            console.log('Connection opened');
+            websocket.send("cstatus");
+
+            document.getElementById("button").disabled = false;
+        }
+        function onClose(event) {
+            console.log('Connection closed');
+            document.getElementById("myRange").disabled = true;
+            document.getElementById("myRange1").disabled = true;
+            document.getElementById("button").disabled = true;
+            setTimeout(initWebSocket, 2000);
+        }
+        function onMessage(event) {
+            var state;
+            const myArray = event.data.split(",");
+            console.log(event.data);
+            if (myArray[0] == 0) {
+                state = "ON";
+
+                document.getElementById("myRange").disabled = false;
+                document.getElementById("myRange1").disabled = false;
+
+                document.getElementById("myRange").value = myArray[1];
+                document.getElementById("myRange1").value = myArray[2];
+                document.getElementById('myR').innerHTML = myArray[1];
+                document.getElementById('myR1').innerHTML = myArray[2];
+            }
+            else {
+                state = "OFF";
+                document.getElementById("myRange").disabled = true;
+                document.getElementById("myRange1").disabled = true;
+            }
+            document.getElementById('state').innerHTML = state;
+        }
+
+        function onLoad(event) {
+            initWebSocket();
+            initButton();
+        }
+
+        function initButton() {
+            var slider = document.getElementById("myRange");
+            slider.oninput = function () {
+                document.getElementById('myR').innerHTML = this.value;
+                websocket.send('bness,' + this.value);
+                console.log('bness,' + this.value);
+            }
+
+            var slider1 = document.getElementById("myRange1");
+            slider1.oninput = function () {
+                document.getElementById('myR1').innerHTML = this.value;
+                websocket.send('kness,' + this.value);
+                console.log('kness,' + this.value);
+            }
+
+            document.getElementById('button').addEventListener('click', toggle);
+        }
+
+
+        function toggle() {
+            websocket.send('toggle');
+            console.log('toggle');
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="d-flex flex-column justify-content-center w-100 h-100">
+
+        <div class="d-flex flex-column justify-content-center align-items-center">
+
+        </div>
+    </div>
+    <div class="topnav">
+        <h1>Wi-Fi Dimmer</h1>
+    </div>
+    <div class="content">
+
+        <div class="card">
+            <p class="state">State: <span id="state"></span></p>
+            <p><button disable id="button" class="button">Toggle</button></p>
+            <div> Brightness :
+                <input disable type="range" step="10" value="10" min="10" max="100" id="myRange">
+            </div>
+            <div id="myR"> </div>
+            <div></div>
+            <div> Warm :
+                <input type="range" step="10" value="0" min="0" max="100" id="myRange1">
+
+            </div>
+            <div id="myR1"> </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

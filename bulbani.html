@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulb Animation</title>
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #020202;
+    }
+    
+    .bulb-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 115%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    
+    .bulb {
+        position: relative;
+        width: 100px;
+        height: 150px;
+        background-color: #f9ed69;
+        border-radius: 60%;
+        box-shadow: 0 0 50px 20px #f9ed69;
+        transition: box-shadow 0.5s ease;
+        z-index: 1;
+    }
+    
+    .bulb-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(115, 114, 105, 0.1);
+        border-radius: 50%;
+        filter: blur(20px);
+        
+        z-index: 0;
+    }
+    
+    @keyframes glow {
+        0% {
+            opacity: 0.3;
+        }
+        100% {
+            opacity: 0.8;
+        }
+    }
+    
+    #brightness-slider {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        z-index: 2;
+    }
+</style>
+</head>
+<body>
+<div class="bulb-container">
+    <div class="bulb" id="bulb"></div>
+    <div class="bulb-glow"></div>
+</div>
+<input type="range" id="brightness-slider" min="10" max="100" value="10" step="10">
+<script>
+    const bulb = document.getElementById('bulb');
+    const brightnessSlider = document.getElementById('brightness-slider');
+    
+    function updateBulb() {
+        const brightness = brightnessSlider.value;
+        const boxShadow = `0 0 ${brightness * 0.5}px ${brightness * 0.1}px #f9ed69`;
+        bulb.style.boxShadow = boxShadow;
+    }
+    
+    brightnessSlider.addEventListener('input', updateBulb);
+    updateBulb(); // Initial update
+</script>
+</body>
+</html>
